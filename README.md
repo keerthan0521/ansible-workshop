@@ -3,9 +3,9 @@ Ansible Lab Steps
 =================
 Login to AWS Console
 
-################################################
-Lab 1: Installation and Configuration of Ansible
-################################################
+
+# Lab 1: Installation and Configuration of Ansible
+
 
 # Launch instance RHEL 9 machine in us-east-1. Choose t2.micro. In security group, 
 # allow SSH (22) and HTTP (80) for all incoming traffic. Add Tag Name: Ansible-ControlNode
