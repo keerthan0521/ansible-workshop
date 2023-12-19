@@ -4,16 +4,16 @@ Ansible Lab Steps
 Login to AWS Console
 
 
-# # Lab 1: Installation and Configuration of Ansible
+# # #Lab 1: Installation and Configuration of Ansible
 
 
-# # # Launch instance RHEL 9 machine in us-east-1. Choose t2.micro. In security group, 
-# # # allow SSH (22) and HTTP (80) for all incoming traffic. Add Tag Name: Ansible-ControlNode
+- Launch instance RHEL 9 machine in us-east-1. Choose t2.micro. In security group, 
+- allow SSH (22) and HTTP (80) for all incoming traffic. Add Tag Name: Ansible-ControlNode
 
-# # # Once the EC2 is up & running, SSH into one of it and set the hostname as 'Control-Node'. 
+- Once the EC2 is up & running, SSH into one of it and set the hostname as 'Control-Node'. 
 `sudo hostnamectl set-hostname Control-Node`
-# # # Now you can exit and login again. It will show the new hostname.
-# # # or you can type 'bash' and open another shell which shows new hostname.
+- Now you can exit and login again. It will show the new hostname.
+- or you can type 'bash' and open another shell which shows new hostname.
 
 # # Update the package repository with latest available versions
 `sudo yum check-update`
