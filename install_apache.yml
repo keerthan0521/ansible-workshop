@@ -1,0 +1,27 @@
+---
+
+- name: This task will install apache web server on all managed nodes
+  hosts: all
+  become: yes
+  tasks: 
+   - name: task1 ill install httpd using yum
+     yum:
+      name: httpd
+      update_cache: yes
+      state: latest
+   - name: task2 will upload custom index file on all hosts
+     copy:
+      src: "index.html"
+      dest: "/var/www/html/index.html"
+   - name: task3 will set up attributes for file
+     file:
+       path: "/var/www/html/index.html"
+       owner: apache
+       group: apache
+       mode: 0644
+   - name: this task will start httpd 
+     service:
+       name: httpd
+       state: started
+      
+      
