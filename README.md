@@ -4,7 +4,7 @@ Ansible Lab Steps
 Login to AWS Console
 
 
-# # # Lab 1: Installation and Configuration of Ansible
+### Lab 1: Installation and Configuration of Ansible
 
 
 - Launch instance RHEL 9 machine in us-east-1. Choose t2.micro. In security group, 
@@ -15,17 +15,17 @@ Login to AWS Console
 - Now you can exit and login again. It will show the new hostname.
 - or you can type 'bash' and open another shell which shows new hostname.
 
-# # Update the package repository with latest available versions
+### Update the package repository with latest available versions
 `sudo yum check-update`
 
-# # Install latest version of Python. 
+### Install latest version of Python. 
 `sudo yum install python3-pip wget
 python3 --version
 sudo pip3 install --upgrade pip`
 
 
-# # Install awscli, boto, boto3 and ansible
-# # Boto/Boto3 are AWS SDK which will be needed while accessing AWS APIs
+### Install awscli, boto, boto3 and ansible
+### Boto/Boto3 are AWS SDK which will be needed while accessing AWS APIs
 `sudo pip3 install awscli boto boto3
 sudo pip3 install ansible==4.10.0`
 
@@ -122,10 +122,10 @@ ansible-playbook ec2-playbook.yml
 
 
 
-# # Once you get the ip addresses, do the following:
+### Once you get the ip addresses, do the following:
 sudo vi /etc/ansible/hosts
 
-#  #Add the prive IP addresses, by pressing "INSERT" 
+### Add the prive IP addresses, by pressing "INSERT" 
 node1 ansible_ssh_host=node1-private-ip ansible_ssh_user=ec2-user
 node2 ansible_ssh_host=node2-private-ip ansible_ssh_user=ec2-user
 
@@ -133,12 +133,12 @@ e.g. node1 ansible_ssh_host=172.31.14.113 ansible_ssh_user=ec2-user
      node2 ansible_ssh_host=172.31.2.229 ansible_ssh_user=ec2-user
 
 
-#  # Save the file using "ESCAPE + :wq!"
+### Save the file using "ESCAPE + :wq!"
 
-# # list all managed node ip addresses.
+### list all managed node ip addresses.
 ansible all --list-hosts
 
-# #  SSH into each of them and set the hostnames.
+###  SSH into each of them and set the hostnames.
 `ssh ec2-user@< Replace Node 1 IP >
 sudo hostnamectl set-hostname managed-node-1
 exit`
@@ -147,7 +147,7 @@ exit`
 sudo hostnamectl set-hostname managed-node-2
 exit`
 
-# #  Use ping module to check if the managed nodes are able to interpret the ansible modules
+###  Use ping module to check if the managed nodes are able to interpret the ansible modules
 `ansible all -m ping`
 
 ################################
@@ -155,59 +155,59 @@ Lab 2: Exploring Ad-Hoc Commands
 ################################
 
 `sudo  vi /etc/ansible/hosts`
-#  # Add the given line, by pressing "INSERT" 
+### Add the given line, by pressing "INSERT" 
 #  # add localhost and add the connection as local so that it wont try to use ssh
 `localhost ansible_connection=local`
-#  # save the file using "ESCAPE + :wq!"
+### save the file using "ESCAPE + :wq!"
 
-#  # In real life situations, one of the managed node may be used as the ansible control node.
-# #  In such cases, we can make it a managed node, by adding localhost in hosts inventory file.
+### In real life situations, one of the managed node may be used as the ansible control node.
+###  In such cases, we can make it a managed node, by adding localhost in hosts inventory file.
 
 
-#  # get memory details of the hosts using the below ad-hoc command
+### get memory details of the hosts using the below ad-hoc command
 `ansible all -m command -a "free -h"`
 OR
 `ansible all -a "free -h"`
 
-#  # Create a user ansible-new in the 2 nodes + the control node
-#  # This creates the new user and the home directory /home/ansible-new
+### Create a user ansible-new in the 2 nodes + the control node
+### This creates the new user and the home directory /home/ansible-new
 `ansible all -m user -a "name=ansible-new" --become`
 
-# # lists all users in the machine. Check if ansible-new is present in the managed nodes / localhost
+### lists all users in the machine. Check if ansible-new is present in the managed nodes / localhost
 `ansible node1 -a "cat /etc/passwd"`
 
-# # List all directories in /home. Ensure that directory 'ansible-new' is present in /home. 
+### List all directories in /home. Ensure that directory 'ansible-new' is present in /home. 
 `ansible node2 -a "ls /home"`
 
 
-# #  Change the permission mode from '700' to '755' for the new home directory created for ansible-new
+###  Change the permission mode from '700' to '755' for the new home directory created for ansible-new
 `ansible node1 -m file -a "dest=/home/ansible-new mode=755" --become`
 
 
-# # Check if the permissions got changed
+### Check if the permissions got changed
 `ansible node1 -a "sudo ls -l /home"`
 
 
-# # Create a new file in the new dir in node 1
+### Create a new file in the new dir in node 1
 `ansible node1 -m file -a "dest=/home/ansible-new/demo.txt mode=600 state=touch" --become`
 
 
-# # Check if the permissions got changed
+### Check if the permissions got changed
 `ansible node1 -a "sudo ls -l /home/ansible-new/"
 `
 
-# Add content into the file
+### Add content into the file
 ansible node1 -b -m lineinfile -a 'dest=/home/ansible-new/demo.txt line="This server is managed by Ansible"'
 
 
-# check if the lines are added in demo.txt
+### check if the lines are added in demo.txt
 ansible node1 -a "sudo cat /home/ansible-new/demo.txt"
 
 
-# You can remove the line using parameter state=absent
+### You can remove the line using parameter state=absent
 ansible node1 -b -m lineinfile -a 'dest=/home/ansible-new/demo.txt line="This server is managed by Ansible" state=absent'
 
-# check if the lines are removed from demo.txt
+### check if the lines are removed from demo.txt
 ansible node1 -b -a "sudo cat /home/ansible-new/demo.txt"
 
 # Now copy a file from ansible-control node to host node 1
@@ -215,17 +215,17 @@ touch test.txt
 echo "This file will be copied to managed node using copy module" >> test.txt
 
 ansible node1 -m copy -a "src=test.txt dest=/home/ansible-new/test" -b
-# --become can be replaced by -b
+### --become can be replaced by -b
 
-# check if the file got copied to managed node.
+### check if the file got copied to managed node.
 ansible node1 -b -a "sudo ls -l /home/ansible-new/test"
 
 sudo vi /etc/ansible/hosts
 
-# Remove the below line from hosts inventory file. 
+### Remove the below line from hosts inventory file. 
 localhost ansible_connection=local
 
-# save the file using "ESCAPE + :wq!"
+### save the file using "ESCAPE + :wq!"
 
 ================================================================================
 Playbook
@@ -318,11 +318,11 @@ vi putfile.yml
 
 save the file
 
-# ansible-playbook putfile.yml
+### ansible-playbook putfile.yml
 
 
-# ansible all -m command -a "tail -n 2 /etc/passwd"
-#  ansible all -m command -a "ls -l /home/cloudthat" -b    (-b is become root user)
+### ansible all -m command -a "tail -n 2 /etc/passwd"
+###  ansible all -m command -a "ls -l /home/cloudthat" -b    (-b is become root user)
 
 
 Lab4a:
@@ -362,9 +362,9 @@ vi p2.yml
 
 save the file
 
-# ansible-playbook p2.yml
+### ansible-playbook p2.yml
 
-#  ansible all -a "sudo cat /home/test/ansible/hello.txt"
+###  ansible all -a "sudo cat /home/test/ansible/hello.txt"
 
 
 Task 2: Uninstalling Apache Service
@@ -447,7 +447,7 @@ view page use the public ip address of the vm
 
 Task 2: Implementing ansible variables using extra-vars option
 ----------------------------------------
-# create new file in the same location
+### create new file in the same location
 
 vi index1.html
 <html>
@@ -462,7 +462,7 @@ vi index1.html
 [ec2-user@ansible file]$
 
 
-# ansible-playbook implement-vars.yml --extra-vars "source=/home/ec2-user/lab5/file/index1.html"
+### ansible-playbook implement-vars.yml --extra-vars "source=/home/ec2-user/lab5/file/index1.html"
 
 
 Task 3: Configuring variables as a separate file and implementing ansible playbook
@@ -509,7 +509,7 @@ vi index.html
   </body>
 </html>
 
-# ansible-playbook implement-vars1.yml
+### ansible-playbook implement-vars1.yml
 =========================================================
 Lab 6 Task Inclusion
 ==============================
@@ -556,7 +556,7 @@ save the file
 
 now  run the first file
 
-# ansible-playbook first.yaml
+### ansible-playbook first.yaml
 
 
 vi third.yaml
