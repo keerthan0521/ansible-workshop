@@ -39,7 +39,7 @@ AWS secret Access key
 ******Create the Playbook for creating managed nodes*********
 ` vi ec2-playbook.yml`
 
----
+`---
 - hosts: localhost
   connection: local
 
@@ -113,7 +113,7 @@ AWS secret Access key
         msg: "{{ ec2var.results[0].instances[0].private_ip }}"
 
     - debug:
-        msg: "{{ ec2var.results[1].instances[0].private_ip }}"
+        msg: "{{ ec2var.results[1].instances[0].private_ip }}"`
 
 
 save the file
