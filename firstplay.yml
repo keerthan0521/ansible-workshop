@@ -1,0 +1,17 @@
+---
+
+- name: first play
+  hosts: all
+  become: yes
+  tasks:
+   - name: create a directory
+     file: 
+      path: /test
+      state: directory
+   - name: create a new file
+     file:
+      state: touch
+      path: demo.txt
+      mode: 766
+
+
