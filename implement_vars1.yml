@@ -1,0 +1,22 @@
+---
+- hosts: '{{ hostname }}'
+  become: yes
+  vars:
+    hostname: all
+    package1: httpd
+    destination: /var/www/html/index.html
+    source: /home/ec2-user/ansible_workshop/index.html  #control node path
+  tasks:
+    - name: Install defined package
+      yum:
+        name: '{{ package1 }}'
+        update_cache: yes   # refresh the caches before applying whatever change is necessary
+        state: latest
+    - name: Start desired service
+      service:
+        name: '{{ package1 }}'
+        state: started
+    - name: copy required index.html to the document folder for httpd.
+      copy:
+        src: '{{ source }}'
+        dest: '{{ destination }}'

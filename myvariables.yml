@@ -1,0 +1,5 @@
+---
+- hostname: all
+  destination: /var/www/html/index1.html
+  source: /home/ec2-user/ansible_workshop/index1.html 
+  package1: httpd
